@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>自制表格</title>
+        <style>
+            p{
+                display: inline-block;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <p>行数：</p>
+            <input type="text" v-model="row"/>
+            <p>列数：</p>
+            <input type="text" v-model="column"/>
+            <button v-on:click="commitRowAndColumn">确认</button>
+            <div id="insert"> {{row}}行 和 {{column}}列 </div>
+            
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script>
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    row: "",
+                    column: "",
+                    flag: false
+                },
+                methods: {
+                    commitRowAndColumn: function(){
+
+                        let insert = document.getElementById("insert"),
+                            row = this.row,
+                            column = this.column;
+
+                        if(this.flag == false){
+                            let table1 = document.createElement("table");
+                            insert.appendChild(table1);
+                            table1.setAttribute("id","table");
+                            table1.setAttribute("border","1");
+                            this.flag = true;
+                        }
+                        let table = document.getElementById("table");
+
+                        let cArr = "";
+                        for(let i=0;i<column;i++){
+                            cArr += "<th>♥</th>";
+                        }
+
+                        let rArr = "" 
+                        for(let i=0;i<row;i++){
+                            rArr += "<tr>" + cArr + "</tr>";
+                        }
+
+                        table.innerHTML = rArr;
+                        
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>
