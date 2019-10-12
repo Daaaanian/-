@@ -14,9 +14,8 @@
             <input type="text" v-model="row"/>
             <p>列数：</p>
             <input type="text" v-model="column"/>
-            <button v-on:click="commitRowAndColumn">确认</button>
-            <div id="insert"> {{row}}行 和 {{column}}列 </div>
-            
+            <div> {{row}}行 和 {{column}}列 </div>
+            <table ref="table" border="1"></table>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -26,23 +25,34 @@
                 data: {
                     row: "",
                     column: "",
-                    flag: false
+                },
+                watch: {
+                    // 检测行列变化，实现实时渲染
+                    row(r){
+                        this.commitRowAndColumn();
+                    },
+                    column(c){
+                        this.commitRowAndColumn();
+                    }
                 },
                 methods: {
                     commitRowAndColumn: function(){
+                        let row = this.row,
+                            column = this.column,
+                            table = this.$refs.table;
 
-                        let insert = document.getElementById("insert"),
-                            row = this.row,
-                            column = this.column;
+                        if(!row) return;
+                        if(!column) return;
 
-                        if(this.flag == false){
-                            let table1 = document.createElement("table");
-                            insert.appendChild(table1);
-                            table1.setAttribute("id","table");
-                            table1.setAttribute("border","1");
-                            this.flag = true;
+                        // 当且仅当行列乘积小于5000时显示
+                        // 否则渲染速度会很慢，网页卡住
+                        if(row*column > 5000){
+                            alert("输入的数太大了,请重新输入");
+                            this.row = 0;
+                            this.column = 0;
+                            table.innerHTML = "";
+                            return;
                         }
-                        let table = document.getElementById("table");
 
                         let cArr = "";
                         for(let i=0;i<column;i++){
@@ -55,7 +65,6 @@
                         }
 
                         table.innerHTML = rArr;
-                        
                     }
                 }
             })
